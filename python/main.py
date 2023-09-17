@@ -6,6 +6,8 @@
 # 自身の攻撃力と敵の防御力によりダメージが可変
 '''
 import random
+import questionary
+from questionary import Choice
 
 class Character:
     def __init__(self, name, hit_point, attack_point, defence_point, dexterity_point):
@@ -21,7 +23,8 @@ class Character:
     def attack(self, defender, enemy_defence_point):
         print()
         print(f'{self.name}の攻撃！')
-        defender.defend(round((self.attack_point - enemy_defence_point / 2)/2) + random.randint(0, 3))
+        defender.defend(
+            round((self.attack_point - enemy_defence_point / 2)/2) + random.randint(0, 3))
 
     def defend(self, damage):
         if damage <= 0:
@@ -34,7 +37,7 @@ class Character:
 
 
 MONSTERS = [
-    #(name, hp, atk, def, dex)
+    # (name, hp, atk, def, dex)
     Character('スライム', 5, 5, 3, 1),
     Character('スライムベス', 7, 7, 3, 1),
     Character('ゴースト', 9, 11, 8, 4),
@@ -52,8 +55,26 @@ def main():
     else:
         attacker, defender = monster, hero
     while not attacker.is_dead():
-        attacker.attack(defender, monster.defence_point)
-        attacker, defender = defender, attacker
+        if attacker == hero:
+            select = questionary.select(
+                'どうする？',
+                choices=[
+                    Choice(title="こうげき", value='attack'),
+                    Choice(title="ぼうぎょ", value='defense'),
+                    Choice(title="にげる", value='escape'),
+                ],
+            ).ask()
+            if select == 'attack':
+                attacker.attack(defender, monster.defence_point)
+                attacker, defender = defender, attacker
+            elif select == 'defense':
+                attacker.attack(defender, monster.defence_point)
+                attacker, defender = defender, attacker
+            else:
+                break
+        else:
+            attacker.attack(defender, monster.defence_point)
+            attacker, defender = defender, attacker
 
     print()
     if monster.is_dead():
