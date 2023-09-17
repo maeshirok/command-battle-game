@@ -35,16 +35,15 @@ class Character:
 
 MONSTERS = [
     #(name, hp, atk, def, dex)
-    Character('ゴブリン', 7, 1, 1, 2),
-    Character('スケルトン', 8, 1, 1, 1),
-    Character('ゾンビ', 13, 2, 1, 1),
-    Character('オーガ', 21, 7, 3, 4),
-    Character('トロール', 36, 12, 6, 4),
+    Character('スライム', 5, 5, 3, 1),
+    Character('スライムベス', 7, 7, 3, 1),
+    Character('ゴースト', 9, 11, 8, 4),
+    Character('りゅうおう', 130, 140, 200, 0),
 ]
 
 
 def main():
-    hero = Character('勇者', 26, 9, 9, 3)
+    hero = Character('勇者', 26, 7, 5, 3)
     monster = random.choice(MONSTERS)
     print(f'{monster.name}が現れた！')
 
