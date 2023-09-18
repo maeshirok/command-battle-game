@@ -20,20 +20,20 @@ class Character:
     def is_dead(self):
         return self.hit_point <= 0
 
-    def attack(self, defender, enemy_defence_point):
+    def attack(self, defender, enemy_name, enemy_defence_point):
         print()
-        print(f'{self.name}の攻撃！')
+        print(f'{self.name}のこうげき！')
         defender.defend(
-            round((self.attack_point - enemy_defence_point / 2)/2) + random.randint(0, 3))
+            round((self.attack_point - enemy_defence_point / 2)/2) + random.randint(0, 3), enemy_name)
 
-    def defend(self, damage):
+    def defend(self, damage, enemy_name):
         if damage <= 0:
-            print(f'{self.name}は攻撃をかわした！')
+            print(f'{self.name}はこうげきをかわした！')
             return
         self.hit_point -= damage
-        print(f'{self.name}は{damage}のダメージを受けた！(残りHP:{self.hit_point})')
+        print(f'{self.name}は{damage}ポイントのダメージ！(残りHP:{self.hit_point})')
         if self.is_dead():
-            print(f'{self.name}は力尽きた')
+            print(f'{self.name}はちからつきた')
 
 
 MONSTERS = [
@@ -46,9 +46,9 @@ MONSTERS = [
 
 
 def main():
-    hero = Character('勇者', 26, 7, 5, 3)
+    hero = Character('ゆうしゃ', 21, 6, 3, 3)
     monster = random.choice(MONSTERS)
-    print(f'{monster.name}が現れた！')
+    print(f'{monster.name}があわられた！')
 
     if hero.dexterrity_point >= monster.dexterrity_point:
         attacker, defender = hero, monster
@@ -57,7 +57,7 @@ def main():
     while not attacker.is_dead():
         if attacker == hero:
             select = questionary.select(
-                'どうする？',
+                'コマンド？',
                 choices=[
                     Choice(title="こうげき", value='attack'),
                     Choice(title="ぼうぎょ", value='defense'),
@@ -65,22 +65,22 @@ def main():
                 ],
             ).ask()
             if select == 'attack':
-                attacker.attack(defender, monster.defence_point)
+                attacker.attack(defender, monster.name, monster.defence_point)
                 attacker, defender = defender, attacker
             elif select == 'defense':
-                attacker.attack(defender, monster.defence_point)
+                attacker.attack(defender, monster.name, monster.defence_point)
                 attacker, defender = defender, attacker
             else:
                 break
         else:
-            attacker.attack(defender, monster.defence_point)
+            attacker.attack(defender, monster.name, monster.defence_point)
             attacker, defender = defender, attacker
 
     print()
     if monster.is_dead():
-        print('勇者は戦闘に勝った！')
+        print('まものをたおした！')
     else:
-        print('勇者は戦闘に負けた！')
+        print('ぜんめつした...')
 
 
 if __name__ == '__main__':
